@@ -34,27 +34,27 @@ days_to_retain = 0
 percent_threshold = 100
 sleep = 60
 
-if os.environ['PLEX_VIDEO_CLEANER_DAYS_TO_RETAIN']:
-    days_to_retain = os.environ['PLEX_VIDEO_CLEANER_DAYS_TO_RETAIN'] - 1
-if os.environ['PLEX_VIDEO_CLEANER_PERCENT_THRESHOLD']:
-    percent_threshold = os.environ['PLEX_VIDEO_CLEANER_PERCENT_THRESHOLD'] - 1
-if os.environ['PLEX_VIDEO_CLEANER_SLEEP']:
-    sleep = os.environ['PLEX_VIDEO_CLEANER_SLEEP']
+if 'PLEX_VIDEO_CLEANER_DAYS_TO_RETAIN' in os.environ:
+    days_to_retain = utils.cast(int,os.environ['PLEX_VIDEO_CLEANER_DAYS_TO_RETAIN']) - 1
+if 'PLEX_VIDEO_CLEANER_PERCENT_THRESHOLD' in os.environ:
+    percent_threshold = utils.cast(int,os.environ['PLEX_VIDEO_CLEANER_PERCENT_THRESHOLD']) - 1
+if 'PLEX_VIDEO_CLEANER_SLEEP' in os.environ:
+    sleep = utils.cast(int,os.environ['PLEX_VIDEO_CLEANER_SLEEP'])
 
-if os.environ['PLEX_VIDEO_CLEANER_DEBUG']:
-    debug = os.environ['PLEX_VIDEO_CLEANER_DEBUG']
-if os.environ['PLEX_VIDEO_CLEANER_SHOWS']:
-    process_flag['show'] = os.environ['PLEX_VIDEO_CLEANER_SHOWS']
-if os.environ['PLEX_VIDEO_CLEANER_MOVIES']:
-    process_flag['movie'] = os.environ['PLEX_VIDEO_CLEANER_MOVIES']
+if 'PLEX_VIDEO_CLEANER_DEBUG' in os.environ:
+    debug = utils.cast(bool,os.environ['PLEX_VIDEO_CLEANER_DEBUG'])
+if 'PLEX_VIDEO_CLEANER_SHOWS' in os.environ:
+    process_flag['show'] = utils.cast(bool,os.environ['PLEX_VIDEO_CLEANER_SHOWS'])
+if 'PLEX_VIDEO_CLEANER_MOVIES' in os.environ:
+    process_flag['movie'] = utils.cast(bool,os.environ['PLEX_VIDEO_CLEANER_MOVIES'])
 
-if os.environ['PLEX_VIDEO_CLEANER_BASEURL']:
+if 'PLEX_VIDEO_CLEANER_BASEURL' in os.environ:
     baseurl = os.environ['PLEX_VIDEO_CLEANER_BASEURL']
-if os.environ['PLEX_VIDEO_CLEANER_TOKEN']:
+if 'PLEX_VIDEO_CLEANER_TOKEN' in os.environ:
     token = os.environ['PLEX_VIDEO_CLEANER_TOKEN']
-if os.environ['PLEX_VIDEO_CLEANER_USERNAME']:
+if 'PLEX_VIDEO_CLEANER_USERNAME' in os.environ:
     username = os.environ['PLEX_VIDEO_CLEANER_USERNAME']
-if os.environ['PLEX_VIDEO_CLEANER_PASSWORD']:
+if 'PLEX_VIDEO_CLEANER_PASSWORD' in os.environ:
     password = os.environ['PLEX_VIDEO_CLEANER_PASSWORD']
 
 if token == None:

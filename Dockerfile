@@ -13,6 +13,7 @@ RUN cd /app && \
     python3 -m venv env && \
     source env/bin/activate && \
     pip3 install --upgrade pip && \
+    pip3 install plexapi && \
     pip3 install -r /app/requirements.txt && \
     chmod 755 /app/PlexVideoCleaner.py && \
     mv /etc/inittab /tmp/inittab && \

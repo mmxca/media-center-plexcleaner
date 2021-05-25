@@ -204,8 +204,16 @@ def process_section_movie(section):
 
 def main():
 
-    for k, v in os.environ.items():
-        print(f'{k}={v}')
+    # for k, v in os.environ.items():
+    #     print(f'{k}={v}')
+
+    # dd/mm/YY H:M:S
+    dt_string = datetime.now().strftime("%m/%d/%Y %H:%M:%S")
+    print("***************************************")
+    print("* ")
+    print("* ", dt_string)
+    print("* ")
+    print("***************************************")
 
     plex = PlexServer(baseurl, token)
 

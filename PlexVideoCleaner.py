@@ -90,7 +90,7 @@ def process_delete(key):
 def refresh(key):
 
     print('***', 'REFRESHING', key, '***')
-    url = baseurl + '/library/sections/' + key + '/refresh?X-Plex-Token=' + token
+    url = baseurl + '/library/sections/' + str(key) + '/refresh?X-Plex-Token=' + token
     print(url)
 
     r = requests.delete(url)
@@ -154,6 +154,7 @@ def process_show_season_episode(episode):
         viewOffset = episode.viewOffset
     percent = math.floor((viewOffset / duration) * 100)
 
+
     daysSinceViewed = 0
     if episode.lastViewedAt:
         daysSinceViewed = getDaysSince(episode.lastViewedAt)
@@ -162,11 +163,14 @@ def process_show_season_episode(episode):
     # threshold
     if episode.viewCount > 0 and daysSinceViewed > days_to_retain:
         delete_episode(episode)
+        print(episode)
     else:
         if percent > percent_threshold and daysSinceViewed > days_to_retain:
             delete_episode(episode)
+            print(episode)
         else:
             delete_episode(episode, False)
+
 
 
 def delete_episode(episode, delete=True):
@@ -210,7 +214,7 @@ def main():
 
     # Loop through the sections
     for section in sections:
-
+        
         # If the process_flag for that type is true
         # process that section
         if process_flag[section.type]:

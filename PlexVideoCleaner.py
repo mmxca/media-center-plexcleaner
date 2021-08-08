@@ -22,10 +22,10 @@ debug = False
 
 process_flag = {
     'show': True,
-    'movie': False
+    'movie': True
 }
 
-baseurl = 'http:/localhost:32400'
+baseurl = 'http://localhost:32400'
 token = None
 username = None
 password = None
@@ -33,6 +33,7 @@ password = None
 days_to_retain = 0
 percent_threshold = 100
 sleep = 60
+dry_run = False 
 
 if 'PLEX_VIDEO_CLEANER_DAYS_TO_RETAIN' in os.environ:
     days_to_retain = utils.cast(int,os.environ['PLEX_VIDEO_CLEANER_DAYS_TO_RETAIN']) - 1
@@ -57,6 +58,9 @@ if 'PLEX_VIDEO_CLEANER_USERNAME' in os.environ:
 if 'PLEX_VIDEO_CLEANER_PASSWORD' in os.environ:
     password = os.environ['PLEX_VIDEO_CLEANER_PASSWORD']
 
+if 'PLEX_VIDEO_CLEANER_DRYRUN' in os.environ:
+    dry_run = utils.cast(bool,os.environ['PLEX_VIDEO_CLEANER_DRYRUN'])
+
 if token == None:
     if username == None or password == None:
         raise SystemError("No Authentication Information")
@@ -78,6 +82,10 @@ def getDaysSince(then, now=datetime.now()):
 
 
 def process_delete(key):
+
+    if dry_run:
+        print("DRY RUN")
+        return 
 
     url = baseurl + key + '?X-Plex-Token=' + token
     r = requests.delete(url)
@@ -163,11 +171,9 @@ def process_show_season_episode(episode):
     # threshold
     if episode.viewCount > 0 and daysSinceViewed > days_to_retain:
         delete_episode(episode)
-        print(episode)
     else:
         if percent > percent_threshold and daysSinceViewed > days_to_retain:
             delete_episode(episode)
-            print(episode)
         else:
             delete_episode(episode, False)
 
@@ -179,12 +185,12 @@ def delete_episode(episode, delete=True):
     showTitle = episode.grandparentTitle
     seasonEpisode = episode.seasonEpisode
     episodeTitle = episode.title
-    action = '  KEEP'
+    action = '  KEEP  '
 
     if delete:
         action = '  DELETE'
 
-    if debug & delete:
+    if debug and not delete:
         print(action, key, showTitle, seasonEpisode, episodeTitle)
 
     if delete:
@@ -193,7 +199,50 @@ def delete_episode(episode, delete=True):
 
 
 def process_section_movie(section):
-    print("Movie Processing is not yet available")
+    # Loop through the list of movies in that
+    # section
+    for movie in section.search():
+        process_movie(movie)
+
+def process_movie(movie):
+    # If it has been viewed partially, what percent
+    # of the episode been viewed
+    duration = movie.duration
+    viewOffset = 0
+    if movie.viewOffset:
+        viewOffset = movie.viewOffset
+    percent = math.floor((viewOffset / duration) * 100)
+
+
+    daysSinceViewed = 0
+    if movie.lastViewedAt:
+        daysSinceViewed = getDaysSince(movie.lastViewedAt)
+
+    # Does the viewCount or percentViewed meet the delete
+    # threshold
+    if movie.viewCount > 0 and daysSinceViewed > days_to_retain:
+        delete_movie(movie)
+    else:
+        if percent > percent_threshold and daysSinceViewed > days_to_retain:
+            delete_movie(movie)
+        else:
+            delete_movie(movie, False)
+
+def delete_movie(movie, delete=True):
+
+    key = movie.key
+    movieTitle = movie.title
+    action = '  KEEP  '
+
+    if delete:
+        action = '  DELETE'
+
+    if debug and not delete:
+        print(action, key, movieTitle)
+
+    if delete:
+        print(action, key, movieTitle)
+        process_delete(key)
 
 #################################################
 #

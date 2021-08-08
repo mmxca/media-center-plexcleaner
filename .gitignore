@@ -1,2 +1,4 @@
 env
 wenv
+.venv
+env_vars

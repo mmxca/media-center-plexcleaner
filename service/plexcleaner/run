@@ -1,13 +1,13 @@
 #!/bin/sh
 
-echo "Starting PlexVideoCleaner" >> /logs/plexcleaner.log.`date +'%Y%m%d'`
+echo "Starting PlexVideoCleaner"
 
 sleep 120
 
 while [ 1 == 1 ];
 do
-    echo "Executing PlexVideoCleaner" >> /logs/plexcleaner.log.`date +'%Y%m%d'`
+    echo "Executing PlexVideoCleaner"
     cd /app
-    ./PlexVideoCleaner.py >> /logs/plexcleaner.log.`date +'%Y%m%d'`
+    ./PlexVideoCleaner.py
     sleep $PLEX_VIDEO_CLEANER_INTERVAL
 done

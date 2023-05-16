@@ -86,6 +86,9 @@ def getDaysSince(then, now=datetime.now()):
 
 def process_delete(key):
 
+    if debug:
+        print(f"process_delete(key={key})")
+
     if dry_run:
         print("DRY RUN")
         return 
@@ -95,6 +98,10 @@ def process_delete(key):
         delete_token = parent_token
 
     url = baseurl + key + '?X-Plex-Token=' + delete_token
+
+    if debug:
+        print(f"url={url}")
+
     r = requests.delete(url)
     if r.status_code != 200:
         print(url, "Error Code", r.status_code)
@@ -104,9 +111,15 @@ def process_delete(key):
 
 def refresh(key):
 
+    if debug:
+        print(f"refresh(key={key})")
+
     print('***', 'REFRESHING', key, '***')
+
     url = baseurl + '/library/sections/' + str(key) + '/refresh?X-Plex-Token=' + token
-    print(url)
+
+    if debug:
+        print(f"url={url}")
 
     r = requests.delete(url)
 
@@ -121,6 +134,9 @@ def refresh(key):
 
 
 def process_section(section):
+
+    if debug:
+        print(f"process_section(section={section})")
 
     # If the section is for TV Shows, process that section
     # as a show
@@ -137,6 +153,9 @@ def process_section(section):
 
 def process_section_show(section):
 
+    if debug:
+        print(f"process_section_show(section={section})")
+
     # Loop through the list of shows in that
     # section
     for show in section.search():
@@ -144,6 +163,9 @@ def process_section_show(section):
 
 
 def process_show(show):
+
+    if debug:
+        print(f"process_show(show={show})")
 
     # Loop through the list of seasons for that
     # show
@@ -153,6 +175,9 @@ def process_show(show):
 
 def process_show_season(season):
 
+    if debug:
+        print(f"process_show_season(season={season})")
+
     # Loop through the list of episodes for that
     # season
     for episode in season.episodes():
@@ -160,6 +185,9 @@ def process_show_season(season):
 
 
 def process_show_season_episode(episode):
+
+    if debug:
+        print(f"process_show_season_episode(episode={episode})")
 
     # If it has been viewed partially, what percent
     # of the episode been viewed
@@ -187,6 +215,9 @@ def process_show_season_episode(episode):
 
 
 def delete_episode(episode, delete=True):
+
+    if debug:
+        print(f"delete_episode(episode={episode}, delete={delete})")
 
     key = episode.key
     showTitle = episode.grandparentTitle

@@ -27,6 +27,7 @@ process_flag = {
 
 baseurl = 'http://localhost:32400'
 token = None
+parent_token = None
 username = None
 password = None
 
@@ -53,6 +54,8 @@ if 'PLEX_VIDEO_CLEANER_BASEURL' in os.environ:
     baseurl = os.environ['PLEX_VIDEO_CLEANER_BASEURL']
 if 'PLEX_VIDEO_CLEANER_TOKEN' in os.environ:
     token = os.environ['PLEX_VIDEO_CLEANER_TOKEN']
+if 'PLEX_VIDEO_CLEANER_PARENT_TOKEN' in os.environ:
+    parent_token = os.environ['PLEX_VIDEO_CLEANER_PARENT_TOKEN']
 if 'PLEX_VIDEO_CLEANER_USERNAME' in os.environ:
     username = os.environ['PLEX_VIDEO_CLEANER_USERNAME']
 if 'PLEX_VIDEO_CLEANER_PASSWORD' in os.environ:
@@ -86,8 +89,12 @@ def process_delete(key):
     if dry_run:
         print("DRY RUN")
         return 
+    
+    delete_token = token
+    if parent_token:
+        delete_token = parent_token
 
-    url = baseurl + key + '?X-Plex-Token=' + token
+    url = baseurl + key + '?X-Plex-Token=' + delete_token
     r = requests.delete(url)
     if r.status_code != 200:
         print(url, "Error Code", r.status_code)

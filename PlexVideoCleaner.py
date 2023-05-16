@@ -116,12 +116,16 @@ def refresh(key):
 
     print('***', 'REFRESHING', key, '***')
 
-    url = baseurl + '/library/sections/' + str(key) + '/refresh?X-Plex-Token=' + token
+    refresh_token = token
+    if parent_token:
+        refresh_token = parent_token
+
+    url = baseurl + '/library/sections/' + str(key) + '/refresh?X-Plex-Token=' + refresh_token
 
     if debug:
         print(f"url={url}")
 
-    r = requests.delete(url)
+    r = requests.get(url)
 
     if r.status_code != 200:
         print(url, "Error Code", r.status_code)
